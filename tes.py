@@ -8,7 +8,10 @@ servo2 = Servo(3)
 servo3 = Servo(4)
 bot_token="734540315:AAGuZ0Qt9d6qzd0x3iA8ZVWcG1Vhw-Nb9xA"
 bot=telebot.TeleBot(token=bot_token)
-markup = types.ReplyKeyboardMarkup()
+markup_servo = types.ReplyKeyboardMarkup()
+markup_data = types.ReplyKeyboardMarkup()
+arr_btn = ['-0.5','-0.4','-0.3','-0.2','-0.1','0','0.1','0.2','0.3','0.4','0.5']
+arr_servo =['Servo1','Servo2','Servo3']
 btn_1 = types.KeyboardButton('-0.5')
 btn_2 = types.KeyboardButton('-0.4')
 btn_3 = types.KeyboardButton('-0.3')
@@ -23,26 +26,22 @@ btn_11 = types.KeyboardButton('0.5')
 btn_ser1 = types.KeyboardButton('Servo1')
 btn_ser2 = types.KeyboardButton('Servo2')
 btn_ser3 = types.KeyboardButton('Servo3')
-btnOff = types.KeyboardButton('/lightoff')
+markup_servo.row(btn_ser1,btn_ser2,btn_ser3)
+markup_data.row(btn_1,btn_2,btn_3,btn_4,btn_5)
+markup_data.row(btn_6)
+markup_data.row(btn_7,btn_8,btn_9,btn_10,btn_11)
 
-def gen_markup():
-    markup = InlineKeyboardMarkup()
-    markup.row_width = 3
-    markup.add(InlineKeyboardButton("Servo1", callback_data="cb_servo1"),
-               InlineKeyboardButton("Servo2", callback_data="cb_servo2"),
-               InlineKeyboardButton("Servo3", callback_data="cb_servo3"))
-    return markup
-
-@bot.callback_query_handler(func=lambda call: True)
-def callback_query(call):
-    if call.data == "cb_servo1":
-        print(call)
-        bot.send_message(call.message.message_id," suda")
-def set_servo1(pesan):
-    bot.send_message(pesan.chat.id," suda")
+@bot.message_handler(commands=arr_servo)
+def message_handler(message):
+    bot.send_message(message.chat.id, message.text)
+@bot.message_handler(commands=arr_btn)
+def message_handler(message):
+    bot.send_message(message.chat.id, message.text)
 @bot.message_handler(func=lambda message: True)
 def message_handler(message):
-    bot.send_message(message.chat.id, "Yes/no?", reply_markup=gen_markup())
+    print(type(message.text))
+    bot.send_message(message.chat.id, "Pilih Servo :",reply_markup=markup_servo)
+
 #@bot.message_handler(commands=['lighton'])
 #def light_on(message):
 #    led.on();
